@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>666 Carnival | The Wheel of Sins</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* Base Variables */
+        :root {
+            --bg-color: #050505;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --accent-red: #8b0000;
+            --accent-glow: #ff3333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.15rem;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .brand, .hub-text { font-family: 'Cinzel', serif; }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 1.5rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid rgba(139, 0, 0, 0.3);
+        }
+
+        .brand { font-size: 1.5rem; font-weight: 700; color: var(--text-main); text-decoration: none; letter-spacing: 2px; }
+        .brand span { color: var(--accent-red); }
+        
+        .nav-links { list-style: none; display: flex; gap: 2rem; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; font-family: 'Cinzel', serif; }
+        .nav-links a:hover { color: var(--accent-red); }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            background: radial-gradient(circle at center, #2a0808 0%, var(--bg-color) 70%); padding: 0 1rem;
+        }
+        .hero h1 { font-size: clamp(3rem, 8vw, 6rem); color: var(--accent-red); text-shadow: 0 0 20px rgba(139, 0, 0, 0.5); margin-bottom: 0.5rem; line-height: 1.1; }
+        .hero h2 { font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 400; letter-spacing: 5px; margin-bottom: 2rem; }
+        .btn { padding: 1rem 2.5rem; background: transparent; color: var(--text-main); border: 1px solid var(--accent-red); font-size: 1.1rem; text-decoration: none; letter-spacing: 2px; transition: 0.3s; cursor: pointer; font-family: 'Cinzel', serif; }
+        .btn:hover { background: var(--accent-red); box-shadow: 0 0 15px var(--accent-red); }
+
+        /* WHEEL UI SECTION */
+        section { padding: 6rem 5%; max-width: 1400px; margin: 0 auto; text-align: center; }
+        .section-title { font-size: 3rem; margin-bottom: 1rem; color: var(--accent-red); letter-spacing: 3px; }
+        .section-subtitle { color: var(--text-muted); margin-bottom: 4rem; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; font-family: 'Cinzel', serif; }
+
+        /* Pinaka-bilog ng Gulong */
+        .wheel-container {
+            position: relative;
+            width: 95vw; max-width: 800px; 
+            aspect-ratio: 1 / 1; 
+            margin: 0 auto;
+            border-radius: 50%;
+            border: 4px solid var(--accent-red);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 30px rgba(139, 0, 0, 0.4);
+            background-image: url('wheel.png'); 
+            background-size: cover; background-position: center;
+            overflow: hidden; 
+        }
+
+        /* YUNG NASA GITNANG BILOG */
+        .center-hub {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 35%; height: 35%; 
+            border-radius: 50%;
+            background-color: #0d0d0d; 
+            border: 4px solid var(--accent-red);
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+            z-index: 50; 
+            cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+
+        .center-hub:hover { transform: translate(-50%, -50%) scale(1.08); border-color: #fff; box-shadow: 0 0 30px var(--accent-glow); }
+        
+        .hub-text {
+            color: var(--accent-red);
+            font-size: clamp(1.2rem, 3vw, 2.2rem);
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--accent-red);
+        }
+
+        /* YUNG MGA HIWA (Slices) */
+        .slice {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            clip-path: polygon(50% 50%, 29.3% 0%, 70.7% 0%);
+            transform-origin: 50% 50%;
+            transform: rotate(var(--rotation)); 
+            background: rgba(15, 15, 15, 0.75); 
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .slice:hover { background: rgba(150, 0, 0, 0.85); }
+
+        .content-box {
+            position: absolute; z-index: 2;
+            text-align: center; width: 100%; padding: 0 10px;
+        }
+        .slice .content-box {
+            top: 12%; left: 50%; transform: translateX(-50%); width: 35%; 
+        }
+
+        .wheel-title { font-size: clamp(0.9rem, 2.2vw, 1.4rem); color: #fff; letter-spacing: 2px; margin-bottom: 2px; text-shadow: 0 0 10px rgba(0,0,0,0.9); }
+        .wheel-subtitle { font-size: clamp(0.6rem, 1.3vw, 0.8rem); color: var(--accent-red); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.9); transition: 0.3s; font-family: 'Cinzel', serif; }
+        .slice:hover .wheel-subtitle { color: #fff; }
+
+        /* SCROLLING MODAL STYLES */
+        .modal { 
+            display: none; 
+            position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; 
+            background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); 
+            overflow-y: auto; 
+        }
+        
+        .modal::-webkit-scrollbar { width: 8px; }
+        .modal::-webkit-scrollbar-track { background: #0d0d0d; }
+        .modal::-webkit-scrollbar-thumb { background: var(--accent-red); border-radius: 4px; }
+
+        .modal-content {
+            background-color: #0d0d0d; 
+            margin: 5vh auto; 
+            padding: 3rem 2rem; 
+            border-radius: 8px;
+            width: 90%; max-width: 1300px;
+            position: relative; text-align: center; 
+            animation: modalFadeIn 0.4s ease;
+            display: flex; flex-direction: column; align-items: center;
+            border: 2px solid var(--accent-red); 
+            box-shadow: 0 0 40px rgba(139, 0, 0, 0.6);
+        }
+
+        @keyframes modalFadeIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .modal-content img {
+            width: auto; 
+            max-width: 100%; 
+            max-height: 85vh; 
+            object-fit: contain; 
+            border-radius: 4px; 
+            margin-bottom: 2rem;
+            display: block; 
+            opacity: 0; 
+            transition: opacity 0.6s ease-in-out;
+            outline: none; 
+            background: transparent;
+            border: none;
+            box-shadow: none; 
+        }
+        
+        .modal-content img.loaded { opacity: 1; }
+
+        .close-btn { 
+            position: fixed; 
+            top: 25px; right: 35px; color: var(--text-muted); font-size: 40px; 
+            font-weight: bold; cursor: pointer; transition: 0.3s; z-index: 2005; 
+        }
+        .close-btn:hover { color: var(--accent-glow); }
+        
+        #modal-title { 
+            font-size: clamp(2.5rem, 5vw, 5rem); 
+            color: #fff; margin-bottom: 0.5rem; letter-spacing: 4px; line-height: 1.1; text-transform: uppercase;
+        }
+        
+        #modal-subtitle { color: var(--accent-red); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem; font-family: 'Cinzel', serif; }
+        
+        #modal-desc { 
+            color: var(--text-main); font-size: 1.25rem; line-height: 1.8; padding: 0 1.5rem; 
+            text-align: justify; max-width: 1300px; margin: 0 auto;
+        }
+
+        /* MINIMAL FOOTER */
+        footer { text-align: center; padding: 5rem 2rem; background-color: #0d0d0d; }
+        .footer-info { display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; font-family: 'Cinzel', serif; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .footer-info { flex-direction: column; gap: 1rem; }
+            .modal-content { padding: 2rem 1.5rem; margin: 2vh auto; }
+            #modal-title { font-size: 2.5rem; }
+            #modal-desc { padding: 0; font-size: 1.1rem; text-align: left; }
+            .close-btn { top: 10px; right: 20px; font-size: 35px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#home" class="brand">666 <span>CARNIVAL</span></a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#rides">Wheel of Sins</a></li>
+            <li><a href="#about">Information</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="hero">
+        <h1>666 CARNIVAL</h1>
+        <h2>WELCOME TO HELL</h2>
+        <a href="#rides" class="btn">Spin the Wheel</a>
+    </header>
+
+    <section id="rides">
+        <h2 class="section-title">The Wheel of Sins</h2>
+        <p class="section-subtitle">Choose your eternal attraction.</p>
+        
+        <div class="wheel-container">
+            
+            <div class="center-hub card-trigger"
+                 data-title="" data-subtitle="" 
+                 data-desc="Step right in… if you dare.<br><br>Welcome to 666 Carnival—where thrills meet temptation and every ride pulls you closer to the edge. This isn’t your ordinary amusement park; it’s a dark, electrifying world inspired by the seven deadly sins, each attraction designed to excite, challenge, and lure you in.<br><br>From fiery coasters to haunting illusions, every experience is meant to be unforgettable—and a little dangerous. The lights glow brighter, the rides feel wilder, and the choices… are yours to make.<br><br>At 666 Carnival, it’s not just about the fun—<br>it’s about how far you’re willing to go."
+                 data-img="menu.jpg"> 
+                 <h3 class="hub-text">666<br>Carnival</h3>
+            </div>
+
+            <div class="slice card-trigger" style="--rotation: 0deg;"
+                 data-title="" data-subtitle="" 
+                 data-desc="Step onto a carousel that never truly begins—and never dares to end. In Limbo, time drifts like smoke, and every slow, hypnotic turn lulls you into a strange comfort where nothing hurts… yet nothing ever changes. Stay as long as you like—no one will rush you. But be careful… the longer you remain, the harder it becomes to remember why you ever wanted to leave."
+                 data-img="limbo.jpg">
+                 <div class="content-box">
+                     <h3 class="wheel-title">Limbo</h3>
+                     <p class="wheel-subtitle">Carousel</p>
+                 </div>
+            </div>
+
+            <div class="slice card-trigger" style="--rotation: 45deg;"
+                 data-title="" data-subtitle="" 
+                 data-desc="Climb aboard a magnificent ship that sparkles with promise and illusion. Gold glimmers, lights dance, and everything looks too perfect to be real. As the ship sways, the illusion deepens. Still, it’s hard to resist the charm. After all, isn’t the illusion sometimes better than the truth?"
+                 data-img="fraud.jpg">
+                 <div class="content-box">
+                     <h3 class="wheel-title">Fraud</h3>
+                     <p class="wheel-subtitle">The Ship</p>
+                 </div>
+            </div>
+
+            
+
+            <div class="slice card-trigger" style="--rotation: 225deg;"
+                 data-title="" data-subtitle="" 
+                 data-desc="Welcome to a banquet where the table is always full and the feast never fades. Glowing platters swirl around you, offering endless treats more tempting than the last. Lights flash, music grows louder, and you keep reaching for more, chasing that perfect satisfaction that never quite comes."
+                 data-img="gluttony.jpg">
+                 <div class="content-box">
+                     <h3 class="wheel-title">Gluttony</h3>
+                     <p class="wheel-subtitle">The Feast</p>
+                 </div>
+            </div>
+
+            <div class="slice card-trigger" style="--rotation: 180deg;"
+                 data-title="" data-subtitle="" 
+                 data-desc="Step onto the coldest ride in the park, where glittering treasures lie scattered across a frozen world of silence. At first, it feels like victory—riches within your reach, rewards for the taking. But the deeper you go, the colder it gets. Trust fades. Will you claim everything… even if it means standing alone in the end?"
+                 data-img="greed.jpg">
+                 <div class="content-box">
+                     <h3 class="wheel-title">Greed</h3>
+                     <p class="wheel-subtitle">The Arena</p>
+                 </div>
+            </div>
+
+            <div class="slice card-trigger" style="--rotation: 135deg;"
+                 data-title="" data-subtitle="" 
+                 data-desc="Strap in and prepare for a ride that doesn’t just thrill—it erupts. The Inferno Drop launches you upward in a burst of blazing heat before plunging you into a fiery descent of chaos and destruction. Let it all out—scream, burn, feel everything. Just don’t expect anything to be left standing when it’s over."
+                 data-img="anger.jpg">
+                 <div class="content-box">
+                     <h3 class="wheel-title">Anger</h3>
+                     <p class="wheel-subtitle">Drop</p>
+                 </div>
+            </div>
+
+            <div class="slice card-trigger" style="--rotation: 90deg;"
+                 data-title="" data-subtitle="" 
+                 data-desc="This is no ordinary coaster—it’s a relentless rush through destruction itself. Twisting tracks throw you into sharp turns and sudden drops as you race above a glowing river below. It’s brutal, fast, and unforgettable. You’ll feel the thrill of power and the weight of its consequences all at once."
+                 data-img="violence.jpg">
+                 <div class="content-box">
+                     <h3 class="wheel-title">Violence</h3>
+                     <p class="wheel-subtitle">Coaster</p>
+                 </div>
+            </div>
+
+            <div class="slice card-trigger" style="--rotation: 270deg;"
+                 data-title="" data-subtitle="" 
+                 data-desc="Enter a towering cathedral engulfed in eternal flames, where every step challenges what you believe. This slow, haunting ride takes you through collapsing halls, glowing stained glass, and whispers that tempt you to question everything. Will you hold onto your faith… or let it melt away in the fire?"
+                 data-img="heresy.jpg">
+                 <div class="content-box">
+                     <h3 class="wheel-title">Heresy</h3>
+                     <p class="wheel-subtitle">Cathedral</p>
+                 </div>
+            </div>
+
+            <div class="slice card-trigger" style="--rotation: 315deg;"
+                 data-title="" data-subtitle="" 
+                 data-desc="Feel the heat rise as you climb aboard a ride built on pure desire. The Temptation Twister spins faster and faster, pulling you into a whirlwind of color, sensation, and irresistible allure. You’ll want just one more ride… and then another… and another. After all, what’s the harm in giving in, just a little?"
+                 data-img="lust.jpg">
+                 <div class="content-box">
+                     <h3 class="wheel-title">Lust</h3>
+                     <p class="wheel-subtitle">Twister</p>
+                 </div>
+            </div>
+                 
+        </div>
+    </section>
+
+    <div id="rideModal" class="modal">
+        <span class="close-btn">&times;</span>
+        <div class="modal-content" id="modal-box">
+            <img id="modal-img" src="" alt="Ride Display">
+            <h3 id="modal-title" class="brand"></h3>
+            <div id="modal-subtitle"></div>
+            <p id="modal-desc"></p>
+        </div>
+    </div>
+
+    <footer id="about">
+        <div class="footer-info">
+            <span>&#127760; Hell-Inspired Rides</span>
+            <span>&#9993; A Journey You'll Never Forget</span>
+        </div>
+        <p style="color: #666; font-size: 0.8rem; letter-spacing: 1px;">&copy; 2026 Inferno Amusement Park. Abandon all hope, ye who enter here.</p>
+    </footer>
+
+    <script>
+        const modal = document.getElementById("rideModal");
+        const closeBtn = document.querySelector(".close-btn");
+        const triggers = document.querySelectorAll(".card-trigger");
+
+        const modalImg = document.getElementById("modal-img");
+        const modalTitle = document.getElementById("modal-title");
+        const modalSubtitle = document.getElementById("modal-subtitle");
+        const modalDesc = document.getElementById("modal-desc");
+        const modalBox = document.getElementById("modal-box");
+
+        modalImg.onload = function() {
+            modalImg.classList.add("loaded");
+        };
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                modalImg.classList.remove("loaded");
+                
+                // Logic para sa kulay ng border at layout ng kahon
+                if (this.classList.contains("slice")) {
+                    modalBox.style.border = "2px solid var(--accent-red)";
+                    modalBox.style.boxShadow = "0 0 40px rgba(139, 0, 0, 0.4)";
+                    
+                    // Default layout para sa mga Sins
+                    modal.style.display = "block";
+                    modalBox.style.margin = "5vh auto";
+                } else {
+                    modalBox.style.border = "1px solid #333";
+                    modalBox.style.boxShadow = "0 10px 40px rgba(0,0,0,0.8)";
+                    
+                    // Naka-center layout para lang sa "666 Carnival" sa gitna
+                    modal.style.display = "flex";
+                    modal.style.alignItems = "center";
+                    modal.style.justifyContent = "center";
+                    modalBox.style.margin = "auto";
+                }
+                
+                modalTitle.innerHTML = this.getAttribute('data-title').replace(' ', '<br>'); 
+                
+                const subtitle = this.getAttribute('data-subtitle');
+                modalSubtitle.textContent = subtitle ? "- " + subtitle + " -" : ""; 
+                
+                modalDesc.innerHTML = this.getAttribute('data-desc');
+                modalImg.src = this.getAttribute('data-img');
+                
+                modal.scrollTop = 0; 
+                document.body.style.overflow = "hidden";
+            });
+        });
+
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        }
+    </script>
+</body>
+</html>
